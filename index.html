@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Vue To-Do Manager</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="app">
+    <h1>📝 To-Do Manager</h1>
+    <h2>⏰Pomodoro Technique⏰</h2>
+
+    <div class="timer-box">
+      <h2>{{ formattedCommonTime }}</h2>
+      <div class="timer-buttons">
+        <button @click="startCommonTimer">Start</button>
+        <button @click="stopCommonTimer">Stop</button>
+        <button @click="resetCommonTimer">Reset</button>
+      </div>
+    </div>
+
+    <input type="text" v-model="taskInput" placeholder="Enter a task" />
+    <input type="text" v-model="projectInput" placeholder="Enter project (optional)" />
+    <input type="text" v-model="searchInput" placeholder="🔍 Search task by name" />
+    <button class="add-task-btn" @click="addTask">Add Task</button>
+
+    <table>
+      <thead>
+        <tr>
+          <th>✔️</th>
+          <th>Task</th>
+          <th>Time</th>
+          <th>Start-End</th>
+          <th>Controls</th>
+        </tr>
+      </thead>
+      <tbody>
+        <template v-for="(taskList, date) in groupedTasks" :key="date">
+          <tr class="section-row">
+            <td colspan="5">{{ formatDate(date) }}</td>
+          </tr>
+          <tr v-for="task in taskList" :key="task.id" :class="{ completed: task.completed }">
+            <td><input type="checkbox" v-model="task.completed" @change="saveTasks" /></td>
+            <td><strong>{{ task.name }}</strong><br><span class='project-tag'>{{ task.project }}</span></td>
+            <td>{{ pad(Math.floor(task.time / 60)) }}:{{ pad(task.time % 60) }}</td>
+            <td>{{ task.startTime && task.endTime ? `${task.startTime} - ${task.endTime}` : "-" }}</td>
+            <td>
+              <button @click="startTaskTimer(task.id)">Start</button>
+              <button @click="stopTaskTimer(task.id)">Stop</button>
+              <button @click="deleteTask(task.id)">Delete</button>
+            </td>
+          </tr>
+        </template>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Vue 3 Global CDN -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>
